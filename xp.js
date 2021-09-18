@@ -11,7 +11,7 @@ const search = require('youtube-search');
 const queue = new Map();
 const config1 = require('./utils/gw-config.json');
 
-const client = new Discord.Client();
+const client = new Discord.Client({ fetchAllMembers: true, messageCacheMaxSize: 5 });
 client.slash = require("./utils/slash-commands.js");
 module.exports = client;
 const http = require("http");
@@ -30,12 +30,8 @@ client.config = config;
 const { rejects } = require('assert')
 const { join } = require("path");
 const { readdirSync } = require("fs");
-const mongoose = require('mongoose');
-mongoose.connect(config.mongourl,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (error) => error
-    ? console.log('Failed to connect to database')
-    : console.log('Connected to database'));
+
+
 
 
 
@@ -83,7 +79,44 @@ let index = 0;
     //express
 
       
+const express = require('express');
+const bodyParser = require("body-parser")
+const app = express();
+             
 
+
+const PORT = 3000 || 3001;
+
+           
+
+               
+
+      app.use(bodyParser.json())
+      app.post("/voted", (req, res) => {
+  console.log(req.body) // Logs what is posted to this endpoint
+
+  // You may delete the following 4 lines if you did not use a webhook "password" or "authorization"
+  // Below replace "WEBHOOKtokenHere" to the webhook "password" that you set
+  if (req.header('Authorization') != "indufing$$%(*#%$^$^$^#)#$%$^(BRUHXDINDIAOPYEA THATS WHY XD NO U FUCK") {
+    return res.status("401").end(); // Return 401: Unauthorized
+  }
+  const cchannel = client.channels.cache.get("842749074427215882");
+  // Write some code that will do something for a user that votes
+  const cembed = new Discord.MessageEmbed()
+  .setTitle("A Vote For Bot is Done on Void Bots")
+  .setDescription("Here is Details:")
+  .addField("Voter:", `<@${req.body.user}> has Voted Our Bot`)
+  
+  cchannel.send(cembed);
+
+
+
+  res.status(200).end() // Responds to the post request
+})
+
+
+// Start express on the defined port
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
     
 
 })
@@ -406,4 +439,3 @@ async function registerSlashCommands(dir) {;
 registerSlashCommands('./commands/');
 }
 client.login(config.token);
-require('./dashboard/server');
